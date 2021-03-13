@@ -1,0 +1,1 @@
+// alert("HALO FROM JS PUBLIC FILE")

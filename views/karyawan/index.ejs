@@ -1,0 +1,51 @@
+<% layout('layouts/boilerplate')%>
+  <h1>Ini adalah daftar karyawan</h1>
+  <a href="/karyawan/new">Tambah karyawan</a>
+  <form method="GET" action="/karyawan">
+    <input type="text" name="nama">
+    <input type="submit" value="Search">
+  </form>
+  <form method="GET" action="/karyawan">
+    <input type="submit" value="Reset">
+  </form>
+  <form action="/logout" method="POST">
+    <button>LogOut</button>
+  </form>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>Nama</th>
+        <th>Jenis Kelamin</th>
+        <th>Alamat</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% let no=1; for(let karyawan of karyawans){ %>
+        <tr>
+          <td>
+            <%= no++ %>
+          </td>
+          <td>
+            <%= karyawan.nama %>
+          </td>
+          <td>
+            <%= karyawan.jkel %>
+          </td>
+          <td>
+            <%= karyawan.alamat %>
+          </td>
+          <td><a href="/karyawan/<%= karyawan.id %>/edit">Edit</a>
+            <form method="POST" action="/karyawan/<%= karyawan.id %>?_method=DELETE">
+              <button>Delete</button>
+            </form>
+          </td>
+        </tr>
+        <% } %>
+
+    </tbody>
+  </table>
+  </body>
+
+  </html>

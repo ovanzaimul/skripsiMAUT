@@ -7,7 +7,9 @@ const flash = require('connect-flash');
 const ejsMate = require('ejs-mate');
 
 const karyawanRoutes = require('./routes/karyawan');
+const { requireLoggin } = require('./middleware');
 const userRoutes = require('./routes/user');
+const kriteriaRoutes = require('./routes/kriteria');
 
 
 const port = 5000;
@@ -57,18 +59,16 @@ app.use((req, res, next) => { //add on to res obj so that in every single templa
   next();
 });
 
-const requireLoggin = (req, res, next) => {
-  if (!req.session.currentUser) {
-    return res.redirect('/login')
-  }
-  next();
-}
 
-app.use('/karyawan', karyawanRoutes);
 app.use('/', userRoutes);
+app.use('/karyawan', karyawanRoutes);
+app.use('/kriteria', kriteriaRoutes);
 
 app.get('/', requireLoggin, (req, res) => {
   res.redirect('/karyawan');
+});
+app.get('/dashboard', requireLoggin, (req, res) => {
+  res.render('layouts/menuDashboard');
 });
 
 

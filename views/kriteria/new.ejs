@@ -1,0 +1,18 @@
+<% layout('layouts/boilerplate')%>
+  <h1>Ini adalah form tambah kriteria</h1>
+  <form method="POST" action="/kriteria">
+    <div>
+      <label for="nama">Kode Kriteria</label>
+      <input type="text" id="nama" name="kriteria[kode]">
+    </div>
+    <div>
+      <label for="nama">Nama Kriteria</label>
+      <input type="text" id="nama" name="kriteria[nama]">
+    </div>
+    <div>
+      <label for="bobot">bobot</label>
+      <input type="text" id="bobot" name="kriteria[bobot]">
+    </div>
+    <button>Tambah!</button>
+  </form>
+  <a href="/kriteria">Semua Kriteria</a>

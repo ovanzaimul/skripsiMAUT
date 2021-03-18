@@ -1,51 +1,120 @@
 <% layout('layouts/boilerplate')%>
-  <h1>Ini adalah daftar karyawan</h1>
-  <a href="/karyawan/new">Tambah karyawan</a>
-  <form method="GET" action="/karyawan">
-    <input type="text" name="nama">
-    <input type="submit" value="Search">
-  </form>
-  <form method="GET" action="/karyawan">
+  <!-- <form method="GET" action="/karyawan" class="d-md-inline-block form-inline mr-auto">
+    <div class="input-group">
+      <input class="form-control" type="text" name="nama" placeholder="Search for..." aria-label="Search"
+        aria-describedby="basic-addon2" />
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+      </div>
+    </div>
+  </form> -->
+
+  <!-- <form method="GET" action="/karyawan">
     <input type="submit" value="Reset">
-  </form>
-  <form action="/logout" method="POST">
-    <button>LogOut</button>
-  </form>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>No.</th>
-        <th>Nama</th>
-        <th>Jenis Kelamin</th>
-        <th>Alamat</th>
-        <th>Aksi</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% let no=1; for(let karyawan of karyawans){ %>
-        <tr>
-          <td>
-            <%= no++ %>
-          </td>
-          <td>
-            <%= karyawan.nama %>
-          </td>
-          <td>
-            <%= karyawan.jkel %>
-          </td>
-          <td>
-            <%= karyawan.alamat %>
-          </td>
-          <td><a href="/karyawan/<%= karyawan.id %>/edit">Edit</a>
-            <form method="POST" action="/karyawan/<%= karyawan.id %>?_method=DELETE">
-              <button>Delete</button>
-            </form>
-          </td>
-        </tr>
-        <% } %>
+  </form> -->
+  <div class="col-12 mt-3 mb-3 d-flex justify-content-between">
+    <h4 class="text-uppercase"><i class="fas fa-users mr-1"></i>Data Karyawan</h4>
+    <a href="/karyawan/new" data-toggle="modal" data-target="#exampleModalCenter" class="btn btn-primary"><i
+        class="fas fa-plus mr-1"></i>Tambah Karyawan</a>
 
-    </tbody>
-  </table>
-  </body>
 
-  </html>
+
+    <!-- Modal Tambah data -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fas fa-plus mr-1"></i>Tambah Data</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- form tambah karyawan -->
+            <form method="POST" action="/karyawan">
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Nama</label>
+                <input type="text" name="karyawan[nama]" class="form-control" id="recipient-name">
+              </div>
+              <div class="form-group">
+                <label for="recipient-tgl" class="col-form-label">Tanggal Lahir</label>
+                <input type="date" name="karyawan[tgllahir]" class="form-control" id="recipient-tgl" required>
+              </div>
+              <div class="form-group">
+                <label for="recipient-npwp" class="col-form-label">KTP</label>
+                <input type="text" name="karyawan[ktp]" class="form-control" id="recipient-npwp">
+              </div>
+              <div class="form-group">
+                <label for="recipient-ktp" class="col-form-label">NPWP</label>
+                <input type="text" name="karyawan[npwp]" class="form-control" id="recipient-ktp">
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            <button class="btn btn-primary" type="reset" value="reset"><i
+                class="fas fa-sync-alt mr-1"></i>Reset</button>
+            <button class="btn btn-success"><i class="fas fa-plus mr-1"></i>Tambah Karyawan</button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+  <div class="card mb-4">
+    <div class="card-header">
+      <i class="fas fa-table mr-1"></i>
+      Daftar Data Karyawan
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
+          <thead class="table-info">
+            <tr>
+              <th class="p-3">No.</th>
+              <th class="p-2">Nama</th>
+              <th class="p-2">Tanggal Lahir</th>
+              <th class="p-2">KTP</th>
+              <th class="p-2">NPWP</th>
+              <th class="p-2">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% let nomor=1; for(let karyawan of karyawans){ %>
+              <% let current_datetime=karyawan.tgllahir%>
+                <% let formatted_date=(current_datetime.getDate() - 1) + "-" + (current_datetime.getMonth()+1) + "-" +
+                  (current_datetime.getFullYear() )%>
+                  <tr class="table-active">
+                    <td class="p-2">
+                      <%= nomor++ %>
+                    </td>
+                    <td class="p-2">
+                      <%= karyawan.nama %>
+                    </td>
+                    <td class="p-2">
+                      <%= formatted_date %>
+                    </td>
+                    <td class="p-2">
+                      <%= karyawan.ktp %>
+                    </td>
+                    <td class="p-2">
+                      <%= karyawan.npwp %>
+                    </td>
+                    <td class="d-flex p-3">
+                      <a class="btn btn-warning mr-1" href="/karyawan/<%= karyawan.id %>/edit"><i
+                          class="fas fa-edit"></i></a>
+                      <form method="POST" action="/karyawan/<%= karyawan.id %>?_method=DELETE">
+                        <button class="btn btn-danger"
+                          onclick="return confirm('Apakah yakin ingin menghapus data ini?')"><i
+                            class="fas fa-trash-alt"></i></button>
+                      </form>
+                    </td>
+                  </tr>
+                  <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

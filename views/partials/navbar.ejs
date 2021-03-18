@@ -1,24 +1,122 @@
-<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">OvanBaru</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link" href="/">Home</a>
-        <a class="nav-link" href="/karyawan">Karyawan</a>
-        <a class="nav-link" href="/karyawan/new">New Karyawan</a>
-      </div>
-      <div class="navbar-nav ml-auto">
-        <% if(!currentUser) {%>
-          <a class="nav-link" href="/login">Login</a>
-          <a class="nav-link" href="/register">Register</a>
-          <% } else {%>
-            <a class="nav-link" href="/logout">Logout</a>
-            <% } %>
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+  <a class="navbar-brand" href="/dashboard">SPK MAUT</a>
+  <button class="btn btn-link btn-lg order-1 order-lg-0" id="sidebarToggle" href="#"><i
+      class="fas fa-bars"></i></button>
+  <!-- Navbar Search-->
+  <!-- <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+    <div class="input-group">
+      <input class="form-control" type="text" placeholder="Search for..." aria-label="Search"
+        aria-describedby="basic-addon2" />
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
       </div>
     </div>
-  </div>
+  </form> -->
+  <!-- Navbar-->
+  <ul class="navbar-nav ml-auto my-2 my-md-0">
+    <li class="nav-item dropdown">
+
+      <a class="nav-link dropdown-toggle d-flex align-items-center" id="userDropdown" href="#" role="button"
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user-circle fa-fw"></i><i
+          class="d-inline-block fas fa-caret-down"></i></a>
+
+      <div class="dropdown-menu dropdown-menu-right disabled" aria-labelledby="userDropdown">
+        <% if(!currentUser){ %>
+          <a class="dropdown-item" href="#">Anda belum login </a>
+          <% }else{ %>
+            <a class="dropdown-item" href="#">Logged in as <%= currentUser %> </a>
+
+            <!-- <div class="dropdown-divider"></div> -->
+            <a class="dropdown-item" href="/logout"><i class="mr-2 fas fa-sign-out-alt"></i>Logout</a>
+            <% } %>
+      </div>
+    </li>
+  </ul>
 </nav>
+<div id="layoutSidenav">
+  <div id="layoutSidenav_nav">
+    <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+      <div class="sb-sidenav-menu">
+        <div class="nav mb-3">
+          <div class="sb-sidenav-menu-heading">Admin</div>
+          <a class="nav-link" href="/dashboard">
+            <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
+            Dashboard
+          </a>
+          <div class="sb-sidenav-menu-heading">Master Data</div>
+          <a class="nav-link" href="/karyawan" aria-expanded="false" aria-controls="collapseLayouts">
+            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+            Data karyawan
+          </a>
+          <a class="nav-link" href="/kriteria" aria-expanded="false" aria-controls="collapseLayouts">
+            <div class="sb-nav-link-icon"><i class="fas fa-cube"></i></div>
+            Data Kriteria
+          </a>
+          <a class="nav-link" href="/kriteria" aria-expanded="false" aria-controls="collapseLayouts">
+            <div class="sb-nav-link-icon"><i class="fas fa-cubes"></i></div>
+            Data Sub Kriteria
+          </a>
+          <a class="nav-link" href="/kriteria" aria-expanded="false" aria-controls="collapseLayouts">
+            <div class="sb-nav-link-icon"><i class="fas fa-list-ul"></i></div>
+            Data Penilaian
+          </a>
+          <a class="nav-link" href="/kriteria" aria-expanded="false" aria-controls="collapseLayouts">
+            <div class="sb-nav-link-icon"><i class="fas fa-poll"></i></div>
+            Data Hasil Penilaian
+          </a>
+
+          <!-- <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+            aria-expanded="false" aria-controls="collapsePages">
+            <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+            Pages
+            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+          </a>
+          <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
+            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+              <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseAuth"
+                aria-expanded="false" aria-controls="pagesCollapseAuth">
+                Authentication
+                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+              </a>
+              <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne"
+                data-parent="#sidenavAccordionPages">
+                <nav class="sb-sidenav-menu-nested nav">
+                  <a class="nav-link" href="login.html">Login</a>
+                  <a class="nav-link" href="register.html">Register</a>
+                  <a class="nav-link" href="password.html">Forgot Password</a>
+                </nav>
+              </div>
+              <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseError"
+                aria-expanded="false" aria-controls="pagesCollapseError">
+                Error
+                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+              </a>
+              <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne"
+                data-parent="#sidenavAccordionPages">
+                <nav class="sb-sidenav-menu-nested nav">
+                  <a class="nav-link" href="401.html">401 Page</a>
+                  <a class="nav-link" href="404.html">404 Page</a>
+                  <a class="nav-link" href="500.html">500 Page</a>
+                </nav>
+              </div>
+            </nav>
+          </div> -->
+          <div class="sb-sidenav-menu-heading">Master User</div>
+          <a class="nav-link" href="charts.html">
+            <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
+            Data User
+          </a>
+          <div class="sb-sidenav-menu-heading">Cetak Data</div>
+          <a class="nav-link" href="charts.html">
+            <div class="sb-nav-link-icon"><i class="fas fa-print"></i></div>
+            Cetak Laporan
+          </a>
+        </div>
+      </div>
+      <!-- <div class="sb-sidenav-footer">
+        <div class="small">Logged in as:</div>
+        Start Bootstrap
+      </div> -->
+    </nav>
+  </div>
+  <div id="layoutSidenav_content">

@@ -1,7 +1,6 @@
 const express = require('express');
 const mysql = require('mysql');
 const router = express.Router();
-const session = require('express-session');
 
 const { requireLoggin } = require('../middleware');
 
@@ -34,6 +33,7 @@ router.get("/", requireLoggin, (req, res) => {
         res.redirect(`/karyawan`);
       } else {
         // console.log(req.session);
+        // console.log(result);
         res.render("karyawan/index", { karyawans: result });
       }
     });
@@ -45,10 +45,10 @@ router.get("/new", requireLoggin, (req, res) => {
 });
 
 router.post("/", requireLoggin, (req, res) => {
-  const karyawanBaru = req.body.karyawan;
-  // console.log(req.body.karyawan);
-  let sql = `INSERT INTO karyawan (nama, jkel, alamat) VALUES
-   ( '${karyawanBaru.nama}', '${karyawanBaru.jkel}', '${karyawanBaru.alamat}')`;
+  // const karyawanBaru = req.body.karyawan;
+  const { nama, tgllahir, ktp, npwp } = req.body.karyawan;
+  let sql = `INSERT INTO karyawan (nama, tgllahir, ktp, npwp) VALUES
+   ( '${nama}', '${tgllahir}', '${ktp}', '${npwp}')`;
   db.query(sql, function (err, result) {
     if (err) {
       req.flash('error', 'Gagal menambahkan data'); //adding informatin to a session
@@ -64,7 +64,7 @@ router.post("/", requireLoggin, (req, res) => {
 
 //Edit Route
 router.get("/:id/edit", requireLoggin, (req, res) => {
-  db.query(`SELECT * FROM karyawan WHERE id = '${req.params.id}'`, function (err, result) {
+  db.query(`SELECT * FROM karyawan WHERE id_karyawan = '${req.params.id}'`, function (err, result) {
     if (err) {
       res.redirect("/karyawan");
     } else {
@@ -77,8 +77,8 @@ router.get("/:id/edit", requireLoggin, (req, res) => {
 //Update route
 router.put("/:id", requireLoggin, (req, res) => {
   const { id } = req.params;
-  const { nama, jkel, alamat } = req.body.karyawan;
-  let sql = `UPDATE karyawan SET nama = '${nama}', jkel = '${jkel}', alamat = '${alamat}'  WHERE id = '${id}'`;
+  const { nama, tgllahir, ktp, npwp } = req.body.karyawan;
+  let sql = `UPDATE karyawan SET nama = '${nama}', tgllahir = '${tgllahir}', ktp = '${ktp}', npwp = '${npwp}'  WHERE id_karyawan = '${id}'`;
   db.query(sql, function (err, result) {
     if (err) {
       req.flash('error', 'Update data gagal'); //adding informatin to a session
@@ -93,7 +93,7 @@ router.put("/:id", requireLoggin, (req, res) => {
 
 //Delete Route
 router.delete("/:id", requireLoggin, (req, res) => {
-  const sql = `DELETE FROM karyawan WHERE (id = '${req.params.id}')`;
+  const sql = `DELETE FROM karyawan WHERE (id_karyawan = '${req.params.id}')`;
   db.query(sql, function (err, result) {
     if (err) {
       req.flash('error', 'Gagal menghapus data'); //adding informatin to a session

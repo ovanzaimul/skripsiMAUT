@@ -19,29 +19,28 @@ db.connect((err) => {
   }
 });
 
-
-
 router.get("/", requireLoggin, (req, res) => {
-  if (req.query.nama) {
-    db.query(`SELECT * FROM kriteria WHERE nama LIKE '%${req.query.nama}%'`, function (err, result, fields) {
-      if (err) throw err;
-      res.render("kriteria/index", { kriterias: result });
-    });
-  } else {
-    db.query("SELECT * FROM kriteria", function (err, result, fields) {
-      if (err) {
-        res.redirect('/kriteria');
-      } else {
-        let arrBobot = result;
-        let total = 0;
-        for (let bobot of arrBobot) {
-          total += bobot.bobot;
-        }
-        // total = Math.round(total);
-        res.render("kriteria/index", { kriterias: result, totalBobot: total });
-      }
-    });
-  }
+  db.query("SELECT * FROM kriteria", function (err, result, fields) {
+    if (err) {
+      res.redirect('/dashboard');
+    } else {
+      res.render("subkriteria/index", { kriterias: result });
+    }
+  });
+});
+
+// let query = `SELECT subkriteria.*, kriteria.kode AS kode_kriteria, kriteria.nama AS nama_kriteria FROM subkriteria, kriteria WHERE subkriteria.id_kriteria = kriteria.id_kriteria`;
+
+router.get("/:idkriteria/sub", requireLoggin, (req, res) => {
+  let query = `SELECT subkriteria.*, kriteria.kode AS kode_kriteria, kriteria.nama AS nama_kriteria FROM subkriteria, kriteria WHERE subkriteria.id_kriteria = kriteria.id_kriteria`;
+  db.query(query, function (err, result, fields) {
+    if (err) {
+      res.redirect('/subkriteria');
+    } else {
+      console.log("sub Result", result);
+      res.render("subkriteria/sub", { subkriterias: result });
+    }
+  });
 });
 
 router.get("/new", requireLoggin, (req, res) => {
@@ -49,25 +48,18 @@ router.get("/new", requireLoggin, (req, res) => {
 });
 
 router.post("/", requireLoggin, (req, res) => {
-  const kriteriaBaru = req.body.kriteria;
-
-  db.query(`SELECT * FROM kriteria WHERE kode = '${kriteriaBaru.kode}'`, async (err, result) => {
-    if (result.length !== 0) {
-      req.flash('error', `Kode kriteria ${kriteriaBaru.kode} sudah ada, Mohon masukkan kode kriteria yang berbeda`); //adding informatin to a session
+  const subkriteriaBaru = req.body.subkriteria;
+  // console.log(req.body.kriteria);
+  let sql = `INSERT INTO subkriteria (kode, nama, bobot) VALUES
+   ( '${kriteriaBaru.kode}', '${kriteriaBaru.nama}', '${kriteriaBaru.bobot / 100}')`;
+  db.query(sql, function (err, result) {
+    if (err) {
+      req.flash('error', 'Gagal menambahkan data'); //adding informatin to a session
       res.redirect(`/kriteria`);
     } else {
-      let sql = `INSERT INTO kriteria (kode, nama, bobot) VALUES
-   ( '${kriteriaBaru.kode.toUpperCase()}', '${kriteriaBaru.nama}', '${kriteriaBaru.bobot / 100}')`;
-      db.query(sql, function (err, result) {
-        if (err) {
-          req.flash('error', 'Gagal menambahkan data'); //adding informatin to a session
-          res.redirect(`/kriteria`);
-        } else {
-          req.flash('success', 'Berhasil menambahkan kriteria baru'); //adding informatin to a session
+      req.flash('success', 'Berhasil menambahkan kriteria baru'); //adding informatin to a session
 
-          res.redirect(`/kriteria`);
-        }
-      });
+      res.redirect(`/kriteria`);
     }
   });
 });
@@ -89,7 +81,7 @@ router.get("/:id/edit", requireLoggin, (req, res) => {
 router.put("/:id", requireLoggin, (req, res) => {
   const { id } = req.params;
   const { kode, nama, bobot } = req.body.kriteria;
-  let sql = `UPDATE kriteria SET kode = '${kode.toUpperCase()}', nama = '${nama}', bobot = '${bobot / 100}'  WHERE id_kriteria = '${id}'`;
+  let sql = `UPDATE kriteria SET kode = '${kode}', nama = '${nama}', bobot = '${bobot / 100}'  WHERE id_kriteria = '${id}'`;
   db.query(sql, function (err, result) {
     if (err) {
       req.flash('error', 'Update data gagal'); //adding informatin to a session

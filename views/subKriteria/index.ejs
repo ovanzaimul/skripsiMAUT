@@ -1,0 +1,44 @@
+<% layout('layouts/boilerplate')%>
+  <div class="col-12 mt-3 mb-3 d-flex justify-content-between">
+    <h4 class="text-uppercase"><i class="fas fa-cubes mr-1"></i>Data Sub Kriteria</h4>
+
+  </div>
+  <div class="card mb-4">
+    <div class="card-header">
+      <i class="fas fa-table mr-1"></i>
+      Daftar Data Sub Kriteria
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
+          <thead class="table-info">
+            <tr>
+              <th class="p-2">No.</th>
+              <th class="p-3">Kode Kriteria</th>
+              <th class="p-2">Nama Kriteria</th>
+              <th class="p-2">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% let nomor=1; for(let kriteria of kriterias){ %>
+              <tr class="table-active">
+                <td class="p-2">
+                  <%= nomor++ %>
+                </td>
+                <td class="p-2">
+                  <%= kriteria.kode %>
+                </td>
+                <td class="p-2">
+                  <%= kriteria.nama %>
+                </td>
+                <td class="d-flex justify-content-center p-2">
+                  <a class="btn btn-primary mr-1" href="/subkriteria/<%= kriteria.id_kriteria %>/sub"><i
+                      class="fas fa-keyboard"></i> Sub Kriteria</a>
+                </td>
+              </tr>
+              <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

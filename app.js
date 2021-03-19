@@ -10,6 +10,7 @@ const karyawanRoutes = require('./routes/karyawan');
 const { requireLoggin } = require('./middleware');
 const userRoutes = require('./routes/user');
 const kriteriaRoutes = require('./routes/kriteria');
+const subKriteriaRoutes = require('./routes/subkriteria');
 
 
 const port = 5000;
@@ -63,9 +64,10 @@ app.use((req, res, next) => { //add on to res obj so that in every single templa
 app.use('/', userRoutes);
 app.use('/karyawan', karyawanRoutes);
 app.use('/kriteria', kriteriaRoutes);
+app.use('/subkriteria', subKriteriaRoutes);
 
 app.get('/', requireLoggin, (req, res) => {
-  res.redirect('/karyawan');
+  res.redirect('/dashboard');
 });
 app.get('/dashboard', requireLoggin, (req, res) => {
   res.render('layouts/menuDashboard');

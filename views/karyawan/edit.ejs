@@ -11,18 +11,19 @@
         Edit Data Karyawan
       </div>
 
-      <form class="col-sm-12" method="POST" action="/karyawan/<%=karyawan.id%>?_method=PUT">
+      <form class="col-sm-12" method="POST" action="/karyawan/<%=karyawan.id_karyawan%>?_method=PUT">
         <div class="form-group row">
           <label for="inputnama" class="col-sm-2 col-form-label">Nama</label>
           <div class="col-sm-10">
-            <input type="text" name="karyawan[nama]" value="<%= karyawan.nama %>" class="form-control" id="inputnama">
+            <input type="text" name="karyawan[nama]" value="<%= karyawan.nama %>" class="form-control" id="inputnama"
+              required>
           </div>
         </div>
         <div class="form-group row">
           <label for="inputtgl" class="col-sm-2 col-form-label">Tanggal Lahir</label>
           <div class="col-sm-10">
             <input type="date" name="karyawan[tgllahir]" value="<%= karyawan.tgllahir.toISOString().substr(0, 10) %>"
-              class="form-control" id="inputtgl">
+              class="form-control" id="inputtgl" required>
           </div>
         </div>
         <div class="form-group row">

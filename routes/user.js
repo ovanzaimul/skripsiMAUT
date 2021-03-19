@@ -2,6 +2,7 @@ const express = require('express');
 const mysql = require('mysql');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const { requireLoggin } = require('../middleware');
 
 
 const db = mysql.createConnection({
@@ -19,31 +20,30 @@ db.connect((err) => {
   }
 });
 
-
 router.get('/register', (req, res) => {
   res.render("user/register");
 });
 
 router.post('/register', async (req, res) => {
-  const { password, username } = req.body;
+  const { password, username, fullname } = req.body;
   const hash = await bcrypt.hash(password, 12);
 
   db.query(`SELECT * FROM user WHERE username = '${username}'`, async (err, result) => {
-    if (result) {
+    if (result.length !== 0) {
       req.flash('error', 'Username telah terdaftar'); //adding informatin to a session
-      res.redirect(`/register`);
+      res.redirect(`/user`);
     } else {
-      let sql = `INSERT INTO user (username, password) VALUES
-   ( '${username}', '${hash}')`;
-      db.query(sql, function (err, result) {
+      let sql = `INSERT INTO user (fullname, username, password) VALUES
+   ('${fullname}' ,'${username}', '${hash}')`;
+      db.query(sql, async function (err, result) {
         if (err) {
-          console.log(err)
+          console.log(err);
           req.flash('error', 'Gagal menambahkan user'); //adding informatin to a session
-          res.redirect(`/register`);
+          res.redirect(`/user`);
         } else {
           req.flash('success', 'Berhasil menambahkan user'); //adding informatin to a session
           req.session.currentUser = username;
-          res.redirect(`/dashboard`);
+          res.redirect(`/user`);
         }
       });
     }
@@ -77,6 +77,76 @@ router.post("/login", async (req, res) => {
         req.flash('error', 'Gagal login, Username atau password salah!');
         res.redirect("/login")
       }
+    }
+  });
+});
+
+router.get("/user", requireLoggin, (req, res) => {
+  db.query(`SELECT * FROM user`, async (err, result) => {
+    if (err) {
+      res.redirect("/login");
+    } else {
+      res.render("user/index", { users: result });
+    }
+  });
+});
+
+
+//Edit Route
+router.get("/user/:id/edit", requireLoggin, (req, res) => {
+  db.query(`SELECT * FROM user WHERE id_user = '${req.params.id}'`, function (err, result) {
+    if (err) {
+      res.redirect("/user");
+    } else {
+      console.log(result)
+      res.render("user/edit", { users: result });
+    }
+  });
+});
+
+//Update route
+router.put("/user/:id", requireLoggin, async (req, res) => {
+  const { id } = req.params;
+  const { username, fullname, password } = req.body.user;
+  console.log("password from edit form: ", req.body.user.password);
+  if (password) {
+    const hash = await bcrypt.hash(password, 12);
+    let sql = `UPDATE user SET username = '${username}', fullname = '${fullname}', password = '${hash}' WHERE id_user = '${id}'`;
+    db.query(sql, function (err, result) {
+      if (err) {
+        req.flash('error', 'Update data gagal'); //adding informatin to a session
+        res.redirect(`/user`);
+      } else {
+        req.flash('success', 'Berhasil update data user'); //adding informatin to a session
+        res.redirect(`/user`);
+      }
+    });
+  } else {
+    let sql = `UPDATE user SET username = '${username}', fullname = '${fullname}' WHERE id_user = '${id}'`;
+    db.query(sql, function (err, result) {
+      if (err) {
+        req.flash('error', 'Update data gagal'); //adding informatin to a session
+        res.redirect(`/user`);
+      } else {
+        req.flash('success', 'Berhasil update data user'); //adding informatin to a session
+        res.redirect(`/user`);
+      }
+    });
+  }
+});
+
+
+//Delete Route
+router.delete("/user/:id", requireLoggin, (req, res) => {
+  const sql = `DELETE FROM user WHERE (id_user = '${req.params.id}')`;
+  db.query(sql, function (err, result) {
+    if (err) {
+      req.flash('error', 'Gagal menghapus data'); //adding informatin to a session
+      console.log(err);
+      res.redirect("/user");
+    } else {
+      req.flash('success', 'Berhasil menghapus user'); //adding informatin to a session
+      res.redirect("/user");
     }
   });
 });

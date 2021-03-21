@@ -11,6 +11,7 @@ const { requireLoggin } = require('./middleware');
 const userRoutes = require('./routes/user');
 const kriteriaRoutes = require('./routes/kriteria');
 const subKriteriaRoutes = require('./routes/subkriteria');
+const penilaianRoutes = require('./routes/penilaian');
 
 
 const port = 5000;
@@ -65,6 +66,7 @@ app.use('/', userRoutes);
 app.use('/karyawan', karyawanRoutes);
 app.use('/kriteria', kriteriaRoutes);
 app.use('/subkriteria', subKriteriaRoutes);
+app.use('/penilaian', penilaianRoutes);
 
 app.get('/', requireLoggin, (req, res) => {
   res.redirect('/dashboard');

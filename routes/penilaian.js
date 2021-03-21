@@ -20,11 +20,11 @@ db.connect((err) => {
 });
 
 router.get("/", requireLoggin, (req, res) => {
-  db.query("SELECT * FROM kriteria", function (err, result, fields) {
+  db.query("SELECT * FROM karyawan", function (err, result, fields) {
     if (err) {
       res.redirect('/dashboard');
     } else {
-      res.render("subkriteria/index", { kriterias: result });
+      res.render("penilaian/index", { karyawans: result });
     }
   });
 });

@@ -60,6 +60,7 @@
               <th class="p-2">NIK</th>
               <th class="p-2">Nama</th>
               <th class="p-2">Aksi</th>
+              <!-- <th class="p-2">Keterangan</th> -->
             </tr>
           </thead>
           <tbody>
@@ -75,9 +76,13 @@
                   <%= karyawan.nama %>
                 </td>
                 <td class="d-flex p-3 justify-content-center">
-                  <a class="btn btn-success mr-1" href="/karyawan/<%= karyawan.id_karyawan %>/edit"><i
+                  <a class="btn btn-success mr-1"
+                    href="/penilaian/<%= karyawan.id_karyawan %>/<%= karyawan.nama %>/input"><i
                       class="fas fa-plus mr-1"></i>isi Penilaian</a>
                 </td>
+                <!-- <td class="p-2">
+                  belum dinilai/sudah dinilai
+                </td> -->
               </tr>
               <% } %>
           </tbody>

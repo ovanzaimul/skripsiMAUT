@@ -153,7 +153,7 @@ router.delete("/user/:id", requireLoggin, (req, res) => {
 
 router.get("/logout", (req, res) => {
   req.session.currentUser = null; //stop tracking the currentUser
-  req.flash('success', 'Good Bye');
+  req.flash('success', 'Goodbye');
   res.redirect('/login');
 });
 

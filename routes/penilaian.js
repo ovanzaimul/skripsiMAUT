@@ -19,94 +19,150 @@ db.connect((err) => {
   }
 });
 
-router.get("/", requireLoggin, (req, res) => {
+router.get("/", (req, res) => {
   db.query("SELECT * FROM karyawan", function (err, result, fields) {
     if (err) {
       res.redirect('/dashboard');
     } else {
-      res.render("penilaian/index", { karyawans: result });
-    }
-  });
-});
-
-router.get("/:idkriteria/sub", requireLoggin, (req, res) => {
-  const { idkriteria } = req.params;
-  let query = `SELECT subkriteria.id_subkriteria, subkriteria.nama, kriteria.nama AS nama_kriteria, kriteria.kode as kode_kriteria, subkriteria.bobot FROM subkriteria INNER JOIN kriteria ON subkriteria.id_kriteria=kriteria.id_kriteria WHERE subkriteria.id_kriteria = ${idkriteria}`
-  // let query = `SELECT subkriteria.nama, subkriteria.bobot FROM subkriteria WHERE subkriteria.id_kriteria = ${idkriteria}`;
-  db.query(query, function (err, result, fields) {
-    if (err) {
-      res.redirect('/subkriteria');
-    } else {
-      // console.log("sub Result", result);
-      // console.log("id Kriteria:", idkriteria);
-      res.render("subkriteria/sub", { subkriterias: result, idkriteria });
-    }
-  });
-});
-
-// New route
-router.post("/:idkriteria/sub/new", requireLoggin, (req, res) => {
-  const subkriteriaBaru = req.body.subkriteria;
-  const { idkriteria } = req.params;
-  let sql = `INSERT INTO subkriteria (id_kriteria, nama, bobot) VALUES ('${idkriteria}', '${subkriteriaBaru.nama}', '${subkriteriaBaru.bobot}')`;
-  db.query(sql, function (err, result) {
-    if (err) {
-      req.flash('error', 'Gagal menambahkan data'); //adding informatin to a session
-      res.redirect(`/subkriteria/${idkriteria}/sub`);
-    } else {
-      req.flash('success', 'Berhasil menambahkan data'); //adding informatin to a session
-      res.redirect(`/subkriteria/${idkriteria}/sub`);
+      db.query("SELECT * FROM penilaian", function (err, penilaians, fields) {
+        if(err){
+          console.log(err);
+        }else{
+          // console.log("===============PENILAIAN ARR : ",penilaians, "=============")
+          res.render("penilaian/index", { karyawans: result, penilaianArr: penilaians });
+        }
+      });
     }
   });
 });
 
 
-//Edit Route
-router.get("/:idkriteria/:idsub/edit", requireLoggin, (req, res) => {
-  const { idkriteria, idsub } = req.params;
-  db.query(`SELECT * FROM subkriteria WHERE id_subkriteria = ${idsub}`, function (err, result) {
+router.get("/:idkaryawan/:namakyw/input", (req, res) => {
+  const { idkaryawan, namakyw } = req.params;
+  db.query("SELECT * FROM kriteria", function (err, kriterias, fields) {
     if (err) {
-      res.redirect(`/subkriteria/${idkriteria}/sub`);
-    } else {
-      res.render("subkriteria/editsub", { subkriterias: result, idkriteria, idsub });
-    }
-  });
-});
-
-//Update route
-router.put("/:idkriteria/:idsub", requireLoggin, (req, res) => {
-  const { idkriteria, idsub } = req.params;
-  // const { idsub } = req.params;
-  const { nama, bobot } = req.body.subkriteria;
-  let sql = `UPDATE subkriteria SET nama = '${nama}', bobot = '${bobot}' WHERE id_subkriteria = '${idsub}'`;
-  db.query(sql, function (err, result) {
-    if (err) {
-      console.log("INI EROR: ", err);
-      req.flash('error', 'Update data gagal'); //adding informatin to a session
-      res.redirect(`/subkriteria/${idkriteria}/sub`);
-    } else {
-      req.flash('success', 'Berhasil update data sub kriteria'); //adding informatin to a session
-      res.redirect(`/subkriteria/${idkriteria}/sub`);
-    }
-  });
-});
-
-
-//Delete Route
-router.delete("/:idkriteria/:idsub", requireLoggin, (req, res) => {
-  const { idkriteria, idsub } = req.params;
-  // let sql = `DELETE FROM kriteria WHERE (id_kriteria = '${req.params.id}')`;
-  let sql = `DELETE FROM subkriteria WHERE id_subkriteria = ${idsub}`;
-  db.query(sql, function (err, result) {
-    if (err) {
-      req.flash('error', 'Gagal menghapus data'); //adding informatin to a session
       console.log(err);
-      res.redirect(`/subkriteria/${idkriteria}/sub`);
+      res.redirect('/penilaian');
     } else {
-      req.flash('success', 'Berhasil menghapus kriteria'); //adding informatin to a session
-      res.redirect(`/subkriteria/${idkriteria}/sub`);
+      db.query(`SELECT kriteria.id_kriteria, subkriteria.id_subkriteria, kriteria.nama AS nama_kriteria, subkriteria.nama AS nama_subkriteria FROM subkriteria INNER JOIN kriteria ON subkriteria.id_kriteria=kriteria.id_kriteria`, function (err, penilaians, fields) {
+        if (err) {
+          console.log(err);
+          res.redirect('/penilaian')
+        } else {
+          var hasilArr = [];
+          for (let k of kriterias) {
+            var option = penilaians.filter(el => {
+              return el.id_kriteria === k['id_kriteria'];
+            });
+            hasilArr.push(option);
+          }
+          // console.log("HASIL ARRRRRRRRRRRRRR", hasilArr)
+          // console.log("HASIL PENILAIANSSSS", penilaians);
+          // console.log("length PENILAIANSSSS", hasilArr.length)
+
+          res.render("penilaian/inputnilai", { hasilArr, idkaryawan, namakyw });
+        }
+      });
     }
   });
 });
+
+// Input nilai route
+router.post("/:idkaryawan/input", (req, res) => {
+  const idsub = req.body.nilai;
+  const { idkaryawan } = req.params;
+  console.log("THIS IS ID SUB(nilai) FROM SELECT : ",idsub);
+
+  //CHECK APAKAH KARYAWAN SUDAH PUNYA NILAI
+  db.query(`SELECT * FROM penilaian WHERE id_karyawan = '${idkaryawan}'`, function (err, result) {
+    if(err){
+      console.log(err)
+    }else{
+      console.log("NILAI RESULT NILAI : ", result)
+      console.log("NILAI RESULT length : ", result.length)
+      if(result.length !== 0){ //jika sudah diberi nilai
+        for(let i = 0; i < result.length; i++){
+      // console.log("NILAI per index dari db : ", result[i].id_subkriteria);
+      // console.log("NILAI per index dari form : ", idsub[i]);
+          let sql = `UPDATE penilaian SET id_subkriteria = '${idsub[i]}' WHERE id_penilaian = '${result[i].id_penilaian}'`;
+          db.query(sql, function (err, result) {
+            if (err) {
+              req.flash('error', 'Gagal input nilai'); //adding informatin to a session
+              // res.redirect(`/penilaian`);
+            } else {
+              req.flash('success', 'Berhasil input nilai'); //adding informatin to a session
+              // res.redirect(`/penilaian`);
+            }
+          });
+        }
+      }else{//jika belum diberi nilaI
+        for(let i = 0; i < idsub.length; i++){
+          let sql = `INSERT INTO penilaian (id_karyawan, id_subkriteria) VALUES('${idkaryawan}', '${idsub[i]}')`;
+          db.query(sql, function (err, result) {
+            if (err) {
+              req.flash('error', 'Gagal update nilai'); //adding informatin to a session
+              // res.redirect(`/penilaian`);
+            } else {
+              req.flash('success', 'Berhasil update nilai'); //adding informatin to a session
+              // res.redirect(`/penilaian`);
+            }
+          });
+        }
+      }
+      
+    }
+  });
+  req.flash('success', 'Berhasil mengisi nilai');
+  res.redirect(`/penilaian`);
+});
+
+
+// //Edit Route
+// router.get("/:idkriteria/:idsub/edit", requireLoggin, (req, res) => {
+//   const { idkriteria, idsub } = req.params;
+//   db.query(`SELECT * FROM subkriteria WHERE id_subkriteria = ${idsub}`, function (err, result) {
+//     if (err) {
+//       res.redirect(`/subkriteria/${idkriteria}/sub`);
+//     } else {
+//       res.render("subkriteria/editsub", { subkriterias: result, idkriteria, idsub });
+//     }
+//   });
+// });
+
+// //Update route
+// router.put("/:idkriteria/:idsub", requireLoggin, (req, res) => {
+//   const { idkriteria, idsub } = req.params;
+//   // const { idsub } = req.params;
+//   const { nama, bobot } = req.body.subkriteria;
+//   let sql = `UPDATE subkriteria SET nama = '${nama}', bobot = '${bobot}' WHERE id_subkriteria = '${idsub}'`;
+//   db.query(sql, function (err, result) {
+//     if (err) {
+//       console.log("INI EROR: ", err);
+//       req.flash('error', 'Update data gagal'); //adding informatin to a session
+//       res.redirect(`/subkriteria/${idkriteria}/sub`);
+//     } else {
+//       req.flash('success', 'Berhasil update data sub kriteria'); //adding informatin to a session
+//       res.redirect(`/subkriteria/${idkriteria}/sub`);
+//     }
+//   });
+// });
+
+
+// //Delete Route
+// router.delete("/:idkriteria/:idsub", requireLoggin, (req, res) => {
+//   const { idkriteria, idsub } = req.params;
+//   // let sql = `DELETE FROM kriteria WHERE (id_kriteria = '${req.params.id}')`;
+//   let sql = `DELETE FROM subkriteria WHERE id_subkriteria = ${idsub}`;
+//   db.query(sql, function (err, result) {
+//     if (err) {
+//       req.flash('error', 'Gagal menghapus data'); //adding informatin to a session
+//       console.log(err);
+//       res.redirect(`/subkriteria/${idkriteria}/sub`);
+//     } else {
+//       req.flash('success', 'Berhasil menghapus kriteria'); //adding informatin to a session
+//       res.redirect(`/subkriteria/${idkriteria}/sub`);
+//     }
+//   });
+// });
 
 module.exports = router;

@@ -32,8 +32,6 @@ router.get("/", requireLoggin, (req, res) => {
       if (err) {
         res.redirect(`/karyawan`);
       } else {
-        // console.log(req.session);
-        // console.log(result);
         res.render("karyawan/index", { karyawans: result });
       }
     });
@@ -45,7 +43,6 @@ router.get("/new", requireLoggin, (req, res) => {
 });
 
 router.post("/", requireLoggin, (req, res) => {
-  // const karyawanBaru = req.body.karyawan;
   const { nama, tgllahir, ktp, npwp } = req.body.karyawan;
   let sql = `INSERT INTO karyawan (nama, tgllahir, ktp, npwp) VALUES
    ( '${nama}', '${tgllahir}', '${ktp}', '${npwp}')`;
@@ -54,8 +51,8 @@ router.post("/", requireLoggin, (req, res) => {
       req.flash('error', 'Gagal menambahkan data'); //adding informatin to a session
       res.redirect(`/karyawan`);
     } else {
+      //beri nilai default karyawan
       req.flash('success', 'Berhasil menambahkan karyawan baru'); //adding informatin to a session
-
       res.redirect(`/karyawan`);
     }
   });

@@ -13,6 +13,11 @@ const kriteriaRoutes = require('./routes/kriteria');
 const subKriteriaRoutes = require('./routes/subkriteria');
 const penilaianRoutes = require('./routes/penilaian');
 const hasilRoutes = require('./routes/hasil');
+const cetakRoutes = require('./routes/laporan');
+
+
+
+
 
 
 const port = 5000;
@@ -69,6 +74,7 @@ app.use('/kriteria', kriteriaRoutes);
 app.use('/subkriteria', subKriteriaRoutes);
 app.use('/penilaian', penilaianRoutes);
 app.use('/hasil', hasilRoutes);
+app.use('/cetak', cetakRoutes);
 
 app.get('/', requireLoggin, (req, res) => {
   res.redirect('/dashboard');
@@ -76,9 +82,6 @@ app.get('/', requireLoggin, (req, res) => {
 app.get('/dashboard', requireLoggin, (req, res) => {
   res.render('layouts/menuDashboard');
 });
-
-
-
 module.exports = requireLoggin;
 
 app.listen(port, () => {

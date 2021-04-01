@@ -2,6 +2,8 @@ const express = require('express');
 const mysql = require('mysql');
 const router = express.Router();
 
+
+
 const { requireLoggin } = require('../middleware');
 
 const db = mysql.createConnection({
@@ -19,8 +21,9 @@ db.connect((err) => {
   }
 });
 
-let laporan = "";
 
+
+// cetak route
 router.get("/", (req, res) => {
   let query = `SELECT kriteria.id_kriteria, kriteria.bobot as bobot_kriteria, karyawan.id_karyawan AS id_karyawan, karyawan.nama, karyawan.ktp, subkriteria.bobot AS bobot_subkriteria FROM penilaian INNER JOIN karyawan ON penilaian.id_karyawan=karyawan.id_karyawan INNER JOIN subkriteria ON penilaian.id_subkriteria=subkriteria.id_subkriteria INNER JOIN kriteria ON penilaian.id_kriteria=kriteria.id_kriteria ORDER BY karyawan.id_karyawan ASC`;
   db.query(query, function (err, results, fields) {
@@ -111,13 +114,16 @@ console.log(uniqueKaryawan);
 //Urutrkan nilai dari yang terbesar
 uniqueKaryawan.sort((a, b) => parseFloat(b.bobot_subkriteria) - parseFloat(a.bobot_subkriteria));
 
-    res.render('hasil/index', {skors: uniqueKaryawan});
+    res.render('hasil/laporan', {skors: uniqueKaryawan});
+    
     }
   });
 
     }
   });
 });
+
+
 
 
 module.exports = router;

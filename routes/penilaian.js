@@ -69,22 +69,24 @@ router.get("/:idkaryawan/:namakyw/input",requireLoggin, (req, res) => {
 
 // Input nilai route
 router.post("/:idkaryawan/input",requireLoggin, (req, res) => {
+  const idKriteria = req.body.idKriteria;
   const idsub = req.body.nilai;
   const { idkaryawan } = req.params;
   console.log("THIS IS ID SUB(nilai) FROM SELECT : ",idsub);
+  console.log("THIS IS idkriteria FROM hidden input : ",idKriteria);
 
   //CHECK APAKAH KARYAWAN SUDAH PUNYA NILAI
   db.query(`SELECT * FROM penilaian WHERE id_karyawan = '${idkaryawan}'`, function (err, result) {
     if(err){
       console.log(err)
     }else{
-      console.log("NILAI RESULT NILAI : ", result)
+      // console.log("NILAI RESULT NILAI : ", result)
       console.log("NILAI RESULT length : ", result.length)
       if(result.length !== 0){ //jika sudah diberi nilai
         for(let i = 0; i < result.length; i++){
       // console.log("NILAI per index dari db : ", result[i].id_subkriteria);
       // console.log("NILAI per index dari form : ", idsub[i]);
-          let sql = `UPDATE penilaian SET id_subkriteria = '${idsub[i]}' WHERE id_penilaian = '${result[i].id_penilaian}'`;
+          let sql = `UPDATE penilaian SET id_kriteria = '${idKriteria[i]}', id_subkriteria = '${idsub[i]}', id_karyawan = '${idkaryawan}' WHERE id_penilaian = '${result[i].id_penilaian}'`;
           db.query(sql, function (err, result) {
             if (err) {
               req.flash('error', 'Gagal input nilai'); //adding informatin to a session
@@ -97,7 +99,7 @@ router.post("/:idkaryawan/input",requireLoggin, (req, res) => {
         }
       }else{//jika belum diberi nilaI
         for(let i = 0; i < idsub.length; i++){
-          let sql = `INSERT INTO penilaian (id_karyawan, id_subkriteria) VALUES('${idkaryawan}', '${idsub[i]}')`;
+          let sql = `INSERT INTO penilaian (id_karyawan, id_subkriteria, id_kriteria) VALUES('${idkaryawan}', '${idsub[i]}', '${idKriteria[i]}')`;
           db.query(sql, function (err, result) {
             if (err) {
               req.flash('error', 'Gagal update nilai'); //adding informatin to a session

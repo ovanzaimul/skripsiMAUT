@@ -13,7 +13,7 @@
       <% for (var i=0; i < hasilArr.length; i++) { %>
         <div class="form-group row">
           <label for="inputnama" class="col-sm-2 col-form-label">
-            <%= hasilArr[i][0].nama_kriteria %>
+                <%= hasilArr[i][0].nama_kriteria %>
           </label>
           <div class="col-sm-10 input-group">
             <select class="custom-select" name="nilai" required>
@@ -23,7 +23,8 @@
                   <%= hasilArr[i][j].nama_subkriteria %>
                 </option>
                 <% } %>
-            </select>
+              </select>
+              <input type="hidden" name="idKriteria" value="<%= hasilArr[i][0].id_kriteria %>">
           </div>
         </div>
         <% } %>

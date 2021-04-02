@@ -44,7 +44,9 @@ router.get("/:idkaryawan/:namakyw/input",requireLoggin, (req, res) => {
       console.log(err);
       res.redirect('/penilaian');
     } else {
-      db.query(`SELECT kriteria.id_kriteria, subkriteria.id_subkriteria, kriteria.nama AS nama_kriteria, subkriteria.nama AS nama_subkriteria FROM subkriteria INNER JOIN kriteria ON subkriteria.id_kriteria=kriteria.id_kriteria`, function (err, penilaians, fields) {
+      // let oldQuery = `SELECT kriteria.id_kriteria, subkriteria.id_subkriteria, kriteria.nama AS nama_kriteria, subkriteria.nama AS nama_subkriteria FROM subkriteria INNER JOIN kriteria ON subkriteria.id_kriteria=kriteria.id_kriteria`
+      let query= `SELECT kriteria.id_kriteria, subkriteria.id_subkriteria, subkriteria.bobot AS bobot_sub, kriteria.nama AS nama_kriteria, subkriteria.nama AS nama_subkriteria FROM subkriteria INNER JOIN kriteria ON subkriteria.id_kriteria=kriteria.id_kriteria ORDER BY bobot_sub DESC`; //bobot sub hanya digunukan u/ mengurutkan option
+      db.query(query, function (err, penilaians, fields) {
         if (err) {
           console.log(err);
           res.redirect('/penilaian')
@@ -56,11 +58,14 @@ router.get("/:idkaryawan/:namakyw/input",requireLoggin, (req, res) => {
             });
             hasilArr.push(option);
           }
-          // console.log("HASIL ARRRRRRRRRRRRRR", hasilArr)
+          console.log("HASIL ARRRRRRRRRRRRRR", hasilArr)
           // console.log("HASIL PENILAIANSSSS", penilaians);
           // console.log("length PENILAIANSSSS", hasilArr.length)
-
-          res.render("penilaian/inputnilai", { hasilArr, idkaryawan, namakyw });
+          
+          //Filter hanya array yang memiliki isi
+          const hasilArrr = hasilArr.filter(arr => arr.length > 0);
+          // res.render("penilaian/inputnilai", { hasilArr, idkaryawan, namakyw });
+          res.render("penilaian/inputnilai", { hasilArrr, idkaryawan, namakyw });
         }
       });
     }

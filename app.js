@@ -8,7 +8,7 @@ const ejsMate = require('ejs-mate');
 
 const karyawanRoutes = require('./routes/karyawan');
 const { requireLoggin } = require('./middleware');
-const userRoutes = require('./routes/user');
+const adminRoutes = require('./routes/admin');
 const kriteriaRoutes = require('./routes/kriteria');
 const subKriteriaRoutes = require('./routes/subkriteria');
 const penilaianRoutes = require('./routes/penilaian');
@@ -44,7 +44,7 @@ const sessionOption = { //memory store(default)
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    expires: Date.now() + 1000 * 60 * 60 * 24 * 7, //so the user don't stay logged in forever
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7, //so the user don't stay logged in forever ==>There are 1000 milliseconds in a second, 60 seconds in a minute, 60 minutes in an hour, and 24 hours in a day. 
     maxAge: 1000 * 60 * 60 * 24 * 7
   }
 };
@@ -68,7 +68,7 @@ app.use((req, res, next) => { //add on to res obj so that in every single templa
 });
 
 
-app.use('/', userRoutes);
+app.use('/', adminRoutes);
 app.use('/karyawan', karyawanRoutes);
 app.use('/kriteria', kriteriaRoutes);
 app.use('/subkriteria', subKriteriaRoutes);
@@ -76,8 +76,8 @@ app.use('/penilaian', penilaianRoutes);
 app.use('/hasil', hasilRoutes);
 app.use('/cetak', cetakRoutes);
 
-app.get('/', requireLoggin, (req, res) => {
-  res.redirect('/dashboard');
+app.get('/', (req, res) => {
+  res.redirect('/login');
 });
 app.get('/dashboard', requireLoggin, (req, res) => {
   res.render('layouts/menuDashboard');

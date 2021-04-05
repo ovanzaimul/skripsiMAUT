@@ -1,5 +1,6 @@
 const express = require('express');
 const mysql = require('mysql');
+const { requireLoggin } = require('../middleware');
 const router = express.Router();
 
 
@@ -24,7 +25,7 @@ db.connect((err) => {
 
 
 // cetak route
-router.get("/", (req, res) => {
+router.get("/", requireLoggin, (req, res) => {
   let query = `SELECT kriteria.id_kriteria, kriteria.bobot as bobot_kriteria, karyawan.id_karyawan AS id_karyawan, karyawan.nama, karyawan.ktp, subkriteria.bobot AS bobot_subkriteria FROM penilaian INNER JOIN karyawan ON penilaian.id_karyawan=karyawan.id_karyawan INNER JOIN subkriteria ON penilaian.id_subkriteria=subkriteria.id_subkriteria INNER JOIN kriteria ON penilaian.id_kriteria=kriteria.id_kriteria ORDER BY karyawan.id_karyawan ASC`;
   db.query(query, function (err, results, fields) {
     if (err) {

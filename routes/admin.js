@@ -21,29 +21,29 @@ db.connect((err) => {
 });
 
 router.get('/register', (req, res) => {
-  res.render("user/register");
+  res.render("admin/register");
 });
 
 router.post('/register', async (req, res) => {
   const { password, username, fullname } = req.body;
   const hash = await bcrypt.hash(password, 12);
 
-  db.query(`SELECT * FROM user WHERE username = '${username}'`, async (err, result) => {
+  db.query(`SELECT * FROM admin WHERE username = '${username}'`, async (err, result) => {
     if (result.length !== 0) {
       req.flash('error', 'Username telah terdaftar'); //adding informatin to a session
-      res.redirect(`/user`);
+      res.redirect(`/admin`);
     } else {
-      let sql = `INSERT INTO user (fullname, username, password) VALUES
+      let sql = `INSERT INTO admin (fullname, username, password) VALUES
    ('${fullname}' ,'${username}', '${hash}')`;
       db.query(sql, async function (err, result) {
         if (err) {
           console.log(err);
           req.flash('error', 'Gagal menambahkan user'); //adding informatin to a session
-          res.redirect(`/user`);
+          res.redirect(`/admin`);
         } else {
           req.flash('success', 'Berhasil menambahkan user'); //adding informatin to a session
           req.session.currentUser = username;
-          res.redirect(`/user`);
+          res.redirect(`/admin`);
         }
       });
     }
@@ -51,13 +51,13 @@ router.post('/register', async (req, res) => {
 });
 
 router.get("/login", (req, res) => {
-  res.render('user/login')
+  res.render('admin/login')
 });
 
 router.post("/login", async (req, res) => {
   // console.log(req.body);
   const { password, username } = req.body;
-  db.query(`SELECT * FROM user WHERE username = '${username}'`, async (err, result) => {
+  db.query(`SELECT * FROM admin WHERE username = '${username}'`, async (err, result) => {
     if (err) {
       console.log("ini eror : ", err);
       res.redirect("/login");
@@ -81,55 +81,55 @@ router.post("/login", async (req, res) => {
   });
 });
 
-router.get("/user", requireLoggin, (req, res) => {
-  db.query(`SELECT * FROM user`, async (err, result) => {
+router.get("/admin", requireLoggin, (req, res) => {
+  db.query(`SELECT * FROM admin`, async (err, result) => {
     if (err) {
       res.redirect("/login");
     } else {
-      res.render("user/index", { users: result });
+      res.render("admin/index", { admins: result });
     }
   });
 });
 
 
 //Edit Route
-router.get("/user/:id/edit", requireLoggin, (req, res) => {
-  db.query(`SELECT * FROM user WHERE id_user = '${req.params.id}'`, function (err, result) {
+router.get("/admin/:id/edit", requireLoggin, (req, res) => {
+  db.query(`SELECT * FROM admin WHERE id_admin = '${req.params.id}'`, function (err, result) {
     if (err) {
-      res.redirect("/user");
+      res.redirect("/admin");
     } else {
       console.log(result)
-      res.render("user/edit", { users: result });
+      res.render("admin/edit", { admins: result });
     }
   });
 });
 
 //Update route
-router.put("/user/:id", requireLoggin, async (req, res) => {
+router.put("/admin/:id", requireLoggin, async (req, res) => {
   const { id } = req.params;
-  const { username, fullname, password } = req.body.user;
-  console.log("password from edit form: ", req.body.user.password);
+  const { username, fullname, password } = req.body.admin;
+  console.log("password from edit form: ", req.body.admin.password);
   if (password) {
     const hash = await bcrypt.hash(password, 12);
-    let sql = `UPDATE user SET username = '${username}', fullname = '${fullname}', password = '${hash}' WHERE id_user = '${id}'`;
+    let sql = `UPDATE admin SET username = '${username}', fullname = '${fullname}', password = '${hash}' WHERE id_admin = '${id}'`;
     db.query(sql, function (err, result) {
       if (err) {
         req.flash('error', 'Update data gagal'); //adding informatin to a session
-        res.redirect(`/user`);
+        res.redirect(`/admin`);
       } else {
-        req.flash('success', 'Berhasil update data user'); //adding informatin to a session
-        res.redirect(`/user`);
+        req.flash('success', 'Berhasil update data admin'); //adding informatin to a session
+        res.redirect(`/admin`);
       }
     });
   } else {
-    let sql = `UPDATE user SET username = '${username}', fullname = '${fullname}' WHERE id_user = '${id}'`;
+    let sql = `UPDATE admin SET username = '${username}', fullname = '${fullname}' WHERE id_admin = '${id}'`;
     db.query(sql, function (err, result) {
       if (err) {
         req.flash('error', 'Update data gagal'); //adding informatin to a session
-        res.redirect(`/user`);
+        res.redirect(`/admin`);
       } else {
-        req.flash('success', 'Berhasil update data user'); //adding informatin to a session
-        res.redirect(`/user`);
+        req.flash('success', 'Berhasil update data admin'); //adding informatin to a session
+        res.redirect(`/admin`);
       }
     });
   }
@@ -137,16 +137,16 @@ router.put("/user/:id", requireLoggin, async (req, res) => {
 
 
 //Delete Route
-router.delete("/user/:id", requireLoggin, (req, res) => {
-  const sql = `DELETE FROM user WHERE (id_user = '${req.params.id}')`;
+router.delete("/admin/:id", requireLoggin, (req, res) => {
+  const sql = `DELETE FROM admin WHERE (id_admin = '${req.params.id}')`;
   db.query(sql, function (err, result) {
     if (err) {
       req.flash('error', 'Gagal menghapus data'); //adding informatin to a session
       console.log(err);
-      res.redirect("/user");
+      res.redirect("/admin");
     } else {
-      req.flash('success', 'Berhasil menghapus user'); //adding informatin to a session
-      res.redirect("/user");
+      req.flash('success', 'Berhasil menghapus admin'); //adding informatin to a session
+      res.redirect("/admin");
     }
   });
 });

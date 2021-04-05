@@ -110,7 +110,6 @@ uniqueKaryawan[i].bobot_subkriteria = nilai
 console.log(uniqueKaryawan);
 //Urutrkan nilai dari yang terbesar
 uniqueKaryawan.sort((a, b) => parseFloat(b.bobot_subkriteria) - parseFloat(a.bobot_subkriteria));
-
     res.render('hasil/index', {skors: uniqueKaryawan});
     }
   });

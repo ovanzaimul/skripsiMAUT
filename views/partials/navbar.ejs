@@ -22,7 +22,8 @@
 
       <div class="dropdown-menu dropdown-menu-right disabled" aria-labelledby="userDropdown">
         <% if(!currentUser){ %>
-          <a class="dropdown-item" href="#">Anda belum login </a>
+          <a class="dropdown-item" href="#">Anda belum login</a>
+          <a class="dropdown-item" href="/login"><i class="fas fa-sign-in-alt mr-1"></i>Login</a>
           <% }else{ %>
             <a class="dropdown-item" href="#">Logged in as <%= currentUser %> </a>
 
@@ -101,10 +102,10 @@
               </div>
             </nav>
           </div> -->
-          <div class="sb-sidenav-menu-heading">Master User</div>
-          <a class="nav-link" href="/user">
+          <div class="sb-sidenav-menu-heading">Admin</div>
+          <a class="nav-link" href="/admin">
             <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
-            Data User
+            Data Admin
           </a>
           <div class="sb-sidenav-menu-heading">Cetak Data</div>
           <a class="nav-link" href="/cetak">

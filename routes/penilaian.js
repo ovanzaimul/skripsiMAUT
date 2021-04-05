@@ -58,14 +58,27 @@ router.get("/:idkaryawan/:namakyw/input",requireLoggin, (req, res) => {
             });
             hasilArr.push(option);
           }
-          console.log("HASIL ARRRRRRRRRRRRRR", hasilArr)
+          // console.log("HASIL ARRRRRRRRRRRRRR", hasilArr)
           // console.log("HASIL PENILAIANSSSS", penilaians);
           // console.log("length PENILAIANSSSS", hasilArr.length)
           
           //Filter hanya array yang memiliki isi
           const hasilArrr = hasilArr.filter(arr => arr.length > 0);
-          // res.render("penilaian/inputnilai", { hasilArr, idkaryawan, namakyw });
-          res.render("penilaian/inputnilai", { hasilArrr, idkaryawan, namakyw });
+          // console.log(hasilArrr);
+
+          //to get selected option
+          let query= `SELECT * FROM penilaian WHERE id_karyawan = '${idkaryawan}'`; 
+          db.query(query, function (err, nkars, fields) {
+            if(err){
+              console.log(err);
+              res.redirect('/penilaian')
+            }else{
+              console.log(nkars.length)
+              console.log(hasilArrr.length)
+              console.log(nkars)
+              res.render("penilaian/inputnilai", { hasilArrr, nkars, idkaryawan, namakyw });
+            }
+          });
         }
       });
     }

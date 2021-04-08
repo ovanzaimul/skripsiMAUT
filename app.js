@@ -16,10 +16,6 @@ const hasilRoutes = require('./routes/hasil');
 const cetakRoutes = require('./routes/laporan');
 
 
-
-
-
-
 const port = 5000;
 const app = express();
 

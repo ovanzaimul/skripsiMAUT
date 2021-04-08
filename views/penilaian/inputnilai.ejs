@@ -24,7 +24,7 @@
               <option value="" selected >--Pilih Nilai--</option>
               <% for (var j=0; j < hasilArrr[i].length; j++) { %>
 
-                <% if(hasilArrr[i][j].id_subkriteria == nkars[i].id_subkriteria){ %> 
+                <% if( nkars.length > 0 && hasilArrr[i][j].id_subkriteria == nkars[i].id_subkriteria){ %> 
 
                 <option value="<%= hasilArrr[i][j].id_subkriteria %>" selected>
                   <%= hasilArrr[i][j].nama_subkriteria %>

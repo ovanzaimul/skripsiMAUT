@@ -74,7 +74,9 @@ router.get("/:idkaryawan/:namakyw/input",requireLoggin, (req, res) => {
               res.redirect('/penilaian')
             }else{
               console.log(nkars.length)
-              console.log(hasilArrr.length)
+              console.log("hasil ARRR", hasilArrr.length)
+              console.log("hasil ARRR", hasilArrr[0].length)
+              console.log("hasil ARRR", hasilArrr)
               console.log(nkars)
               res.render("penilaian/inputnilai", { hasilArrr, nkars, idkaryawan, namakyw });
             }

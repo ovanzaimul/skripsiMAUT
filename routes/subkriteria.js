@@ -31,7 +31,7 @@ router.get("/", requireLoggin, (req, res) => {
 
 router.get("/:idkriteria/sub", requireLoggin, (req, res) => {
   const { idkriteria } = req.params;
-  let query = `SELECT subkriteria.id_subkriteria, subkriteria.nama, kriteria.nama AS nama_kriteria, kriteria.kode as kode_kriteria, subkriteria.bobot FROM subkriteria INNER JOIN kriteria ON subkriteria.id_kriteria=kriteria.id_kriteria WHERE subkriteria.id_kriteria = ${idkriteria}`
+  let query = `SELECT subkriteria.id_subkriteria, subkriteria.nama, kriteria.nama AS nama_kriteria, kriteria.kode as kode_kriteria, subkriteria.bobot FROM subkriteria INNER JOIN kriteria ON subkriteria.id_kriteria=kriteria.id_kriteria WHERE subkriteria.id_kriteria = ${idkriteria} ORDER BY bobot DESC`;
   // let query = `SELECT subkriteria.nama, subkriteria.bobot FROM subkriteria WHERE subkriteria.id_kriteria = ${idkriteria}`;
   db.query(query, function (err, result, fields) {
     if (err) {
@@ -103,7 +103,7 @@ router.delete("/:idkriteria/:idsub", requireLoggin, (req, res) => {
       console.log(err);
       res.redirect(`/subkriteria/${idkriteria}/sub`);
     } else {
-      req.flash('success', 'Berhasil menghapus kriteria'); //adding informatin to a session
+      req.flash('success', 'Berhasil menghapus sub kriteria'); //adding informatin to a session
       res.redirect(`/subkriteria/${idkriteria}/sub`);
     }
   });

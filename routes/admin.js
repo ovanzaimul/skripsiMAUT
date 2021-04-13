@@ -38,10 +38,10 @@ router.post('/register', async (req, res) => {
       db.query(sql, async function (err, result) {
         if (err) {
           console.log(err);
-          req.flash('error', 'Gagal menambahkan user'); //adding informatin to a session
+          req.flash('error', 'Gagal menambahkan admin'); //adding informatin to a session
           res.redirect(`/admin`);
         } else {
-          req.flash('success', 'Berhasil menambahkan user'); //adding informatin to a session
+          req.flash('success', 'Berhasil menambahkan admin'); //adding informatin to a session
           req.session.currentUser = username;
           res.redirect(`/admin`);
         }

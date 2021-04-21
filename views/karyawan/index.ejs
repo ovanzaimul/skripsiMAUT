@@ -84,7 +84,7 @@
           <tbody>
             <% let nomor=1; for(let karyawan of karyawans){ %>
               <% let current_datetime=karyawan.tgllahir%>
-                <% let formatted_date=(current_datetime.getDate() - 1) + "-" + (current_datetime.getMonth()+1) + "-" +
+                <% let formatted_date=(current_datetime.getDate() ) + "-" + (current_datetime.getMonth()+1) + "-" +
                   (current_datetime.getFullYear() )%>
                   <tr class="table-active">
                     <td class="p-2">

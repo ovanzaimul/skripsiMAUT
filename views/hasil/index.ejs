@@ -10,49 +10,117 @@
     <% //} %>  -->
   </div>
 
-  
-  <div class="card mb-4">
-    <div class="card-header">
-      <i class="fas fa-table mr-1"></i>
-      Data Hasil Perankingan
-    </div>
-    <div class="card-body">
-      <div class="table-responsive" id="invoice">
-        <table class="table table-sm table-bordered text-center" id="invoice" width="100%" cellspacing="0">
-          <thead class="table-info">
-            <tr>
-              <th class="p-3">Rangking</th>
-              <th class="p-3">NIK</th>
-              <th class="p-3">Nama Karyawan</th>
-              <th class="p-3">Nilai Evaluasi</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% if(skors.length > 0){ %> 
-            <% let nomor=1; for(let skor of skors){ %>
-              <tr class="table-active">
-                <td class="p-2">
-                  <%= nomor++ %>
-                </td>
-                    <td class="p-2">
-                      <%= skor.ktp %>
-                    </td>
-                    <td class="p-2">
-                      <%= skor.nama %>
-                    </td>
-                    <td class="p-2">
-                      <%= skor.bobot_subkriteria %>
-                    </td>
-                  </tr>
-                  <%} %>
+  <ul class="nav nav-pills mb-3 bg-secondary text-white d-inline-block" id="pills-tab" role="tablist">
+    <li class="nav-item d-inline-block">
+      <a class="nav-link active text-white" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Tabel</a>
+    </li>
+    <li class="nav-item d-inline-block">
+      <a class="nav-link text-white" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Grafik</a>
+    </li>
 
-                  <% }else{ %>
-                    <tr>
-                      <td colspan="4" class="text-warning">*Belum ada hasil penilaian</td>
-                    </tr>
-                <% } %> 
-          </tbody>
-        </table>
+  </ul>
+
+
+  <div class="tab-content" id="pills-tabContent">
+    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+
+
+      <div class="card mb-4">
+        <div class="card-header">
+          <i class="fas fa-table mr-1"></i>
+          Tabel Hasil Perankingan
+        </div>
+        <div class="card-body">
+          <div class="table-responsive" id="invoice">
+            <table class="table table-sm table-bordered text-center" id="invoice" width="100%" cellspacing="0">
+              <thead class="table-info">
+                <tr>
+                  <th class="p-3">Rangking</th>
+                  <th class="p-3">NIK</th>
+                  <th class="p-3">Nama Karyawan</th>
+                  <th class="p-3">Nilai Evaluasi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if(skors.length > 0){ %> 
+                <% let nomor=1; for(let skor of skors){ %>
+                  <tr class="table-active">
+                    <td class="p-2">
+                      <%= nomor++ %>
+                    </td>
+                        <td class="p-2">
+                          <%= skor.ktp %>
+                        </td>
+                        <td class="p-2">
+                          <%= skor.nama %>
+                        </td>
+                        <td class="p-2">
+                          <%= skor.bobot_subkriteria %>
+                        </td>
+                      </tr>
+                      <%} %>
+    
+                      <% }else{ %>
+                        <tr>
+                          <td colspan="4" class="text-warning">*Belum ada hasil penilaian</td>
+                        </tr>
+                    <% } %> 
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+      <div class="container">
+        <div class="card mb-4">
+          <div class="card-header">
+              <i class="fas fa-chart-bar mr-1"></i>
+              Grafik Hasil Perangkingan
+          </div>
+          <!-- <div class="card-body"><canvas id="myChart" width="100%" height="50"></canvas></div> -->
+        <canvas id="myChart"></canvas>
+        </div>
       </div>
     </div>
   </div>
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script> 
+  <script>
+
+    const nama = [];
+    const nilai = [];
+    let skors = "<%= skors %>";
+    "<%for(let skor of skors){ %>"
+    nama.push("<%=skor.nama%>");
+    nilai.push(parseFloat("<%=skor.bobot_subkriteria%>"));
+    console.log("<%=skor.nama%>");
+    "<% } %>"
+    console.log("ini nama kry: ", nama);
+    console.log("ini nilai kry: ", nilai);
+
+    let myChart = document.getElementById("myChart").getContext("2d");
+    let rankChart = new Chart(myChart, {
+      type: 'bar',
+  data: {
+    labels: nama,
+    datasets: [{
+      label: "Nilai",
+      data: nilai,
+      backgroundColor: "#00B5B8",
+      borderColor: "#00B5B8",
+    }],
+  },
+  options: {
+    legend: {
+      display: false
+    }
+  }
+});
+
+
+  </script>

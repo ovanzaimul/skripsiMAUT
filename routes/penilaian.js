@@ -73,11 +73,11 @@ router.get("/:idkaryawan/:namakyw/input",requireLoggin, (req, res) => {
               console.log(err);
               res.redirect('/penilaian')
             }else{
-              console.log(nkars.length)
-              console.log("hasil ARRR", hasilArrr.length)
-              console.log("hasil ARRR", hasilArrr[0].length)
-              console.log("hasil ARRR", hasilArrr)
-              console.log(nkars)
+              // console.log(nkars.length)
+              // console.log("hasil ARRR", hasilArrr.length)
+              // console.log("hasil ARRR", hasilArrr[0].length)
+              // console.log("hasil ARRR", hasilArrr)
+              // console.log(nkars)
               res.render("penilaian/inputnilai", { hasilArrr, nkars, idkaryawan, namakyw });
             }
           });
@@ -92,8 +92,8 @@ router.post("/:idkaryawan/input",requireLoggin, (req, res) => {
   const idKriteria = req.body.idKriteria;
   const idsub = req.body.nilai;
   const { idkaryawan } = req.params;
-  console.log("THIS IS ID SUB(nilai) FROM SELECT : ",idsub);
-  console.log("THIS IS idkriteria FROM hidden input : ",idKriteria);
+  // console.log("THIS IS ID SUB(nilai) FROM SELECT : ",idsub);
+  // console.log("THIS IS idkriteria FROM hidden input : ",idKriteria);
 
   //CHECK APAKAH KARYAWAN SUDAH PUNYA NILAI
   db.query(`SELECT * FROM penilaian WHERE id_karyawan = '${idkaryawan}'`, function (err, result) {
@@ -101,7 +101,7 @@ router.post("/:idkaryawan/input",requireLoggin, (req, res) => {
       console.log(err)
     }else{
       // console.log("NILAI RESULT NILAI : ", result)
-      console.log("NILAI RESULT length : ", result.length)
+      // console.log("NILAI RESULT length : ", result.length)
       if(result.length !== 0){ //jika sudah diberi nilai
         for(let i = 0; i < result.length; i++){
       // console.log("NILAI per index dari db : ", result[i].id_subkriteria);

@@ -38,7 +38,7 @@ router.get("/", (req, res) => {
             return results.find((a) => a.id_kriteria === id_kriteria);
           });
 
-          console.log("INI kriteria unik: ", uniqueKriteria);
+          // console.log("INI kriteria unik: ", uniqueKriteria);
 
           const uniqueKaryawan = Array.from(
             new Set(results.map((a) => a.id_karyawan))
@@ -46,7 +46,7 @@ router.get("/", (req, res) => {
             return results.find((a) => a.id_karyawan === id_karyawan);
           });
 
-          console.log("INI karyawan unik: ", uniqueKaryawan);
+          // console.log("INI karyawan unik: ", uniqueKaryawan);
 
           var hasilArr = [];
           for (let u of uniqueKriteria) {
@@ -63,7 +63,7 @@ router.get("/", (req, res) => {
             hasilArrr.push(optionn);
           }
 
-          console.log("hasilArr bahan normalisasi: ", hasilArr);
+          // console.log("hasilArr bahan normalisasi: ", hasilArr);
 
           const maxArr = [];
           const minArr = [];
@@ -85,10 +85,10 @@ router.get("/", (req, res) => {
             minArr.push(min);
           }
 
-          console.log("Maximum arr: ", maxArr);
-          console.log("Minimum arr: ", minArr);
+          // console.log("Maximum arr: ", maxArr);
+          // console.log("Minimum arr: ", minArr);
 
-          console.log("===========Hasil Normalisasi============");
+          // console.log("===========Hasil Normalisasi============");
           const hasilNormalisasi = [];
           const nkaryawan = [];
           for (let i = 0; i < hasilArr.length; i++) {
@@ -99,9 +99,9 @@ router.get("/", (req, res) => {
                 (maxArr[i].bobot_subkriteria - minArr[i].bobot_subkriteria);
             }
           }
-          console.log(hasilArr);
+          // console.log(hasilArr);
 
-          console.log("===========Hasil Perangkingan============");
+          // console.log("===========Hasil Perangkingan============");
           // hasilArr = 5 kali looping , karyawan = 7 kali looping
           for (let i = 0; i < uniqueKaryawan.length; i++) {
             // debugger;
@@ -115,7 +115,7 @@ router.get("/", (req, res) => {
             // nilaiEvaluasi.push(nilai);
             uniqueKaryawan[i].bobot_subkriteria = nilai;
           }
-          console.log(uniqueKaryawan);
+          // console.log(uniqueKaryawan);
           //Urutrkan nilai dari yang terbesar
           uniqueKaryawan.sort(
             (a, b) =>
